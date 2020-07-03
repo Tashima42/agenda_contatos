@@ -6,6 +6,7 @@ import 'package:agenda_contatos/ui/contact_page.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+//Usado para ordenar os contatos por ordem alfabética
 enum OrderOptions { orderAz, orderZa }
 
 class HomePage extends StatefulWidget {
@@ -14,25 +15,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //Inicia o helper para alterar a DB de contatos
   ContactHelper helper = ContactHelper();
-
+  //Cria uma lista dos contatos na DB
   List<Contact> contacts = List();
-
+  //Usa o initState para listar todos os contatos a partir de uma função
   @override
   void initState() {
     super.initState();
-
     _getAllContacts();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[200],
+      //appbar com um memnu que ordena os contatos alfabeticamente
       appBar: AppBar(
         title: Text("Contatos"),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
         actions: <Widget>[
           PopupMenuButton<OrderOptions>(
             itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
@@ -49,25 +51,29 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      //body que contem um listview com todos os cards dos contatos a partir de um widget
       body: ListView.builder(
         padding: EdgeInsets.all(10.0),
         itemCount: contacts.length,
         itemBuilder: (context, index) {
           return _contactCard(context, index);
         },
+        //Quando clicado leva pra página de adicionar um novo contato
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showContactPage();
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
       ),
     );
   }
 
+  //Lista todos os contatos da DB
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
+      //Quando se clica em um card, mostra as opções de ligar, editar ou excluir
       onTap: () {
         _showOptions(context, index);
       },
@@ -76,18 +82,21 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
+                //Imagem circular
                 Container(
                   width: 80.0,
                   height: 80.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
+                      //Imagem padrão caso nenhuma tenha sido designada
                       image: contacts[index].img != null
                           ? FileImage(File(contacts[index].img))
                           : AssetImage("images/icone.png"),
                     ),
                   ),
                 ),
+                //Campos dos contatos
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: Column(
@@ -115,6 +124,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //Função que navega até a página para adicionar contatos
   void _showContactPage({Contact contact}) async {
     final recContact = await Navigator.push(
         context,
@@ -201,10 +211,8 @@ class _HomePageState extends State<HomePage> {
         contacts.sort((a, b) {
           return b.name.toLowerCase().compareTo(a.name.toLowerCase());
         });
-      break;
+        break;
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 }
