@@ -4,7 +4,7 @@ import 'ui/contact_page.dart';
 
 void main(){
   runApp(MaterialApp(
-    home: ContactPage(),
-    debugShowCheckedModeBanner: false,
+    home: HomePage(), //Chama página da HomePage
+    debugShowCheckedModeBanner: false, //Desativa o banner de debug
   ));
 }
